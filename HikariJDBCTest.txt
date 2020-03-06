@@ -1,0 +1,43 @@
+import java.sql.Connection;
+
+import javax.sql.DataSource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import lombok.extern.log4j.Log4j;
+
+//히카리를 이용해서 db접속 종료 i번실행시간 확인
+@RunWith(SpringJUnit4ClassRunner.class) //JUnit확장하는 것
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml") //스프링 빈 설정 파일의 위치를 지정한다.
+@Log4j
+public class HikariTest {
+
+	@Autowired
+	private DataSource ds;
+
+	@Test
+	public void testCon() throws Exception {
+
+		log.info(ds);
+
+		long start = System.currentTimeMillis();
+
+		for (int i = 0; i < 50; i++) {
+			Connection con = ds.getConnection();
+
+			log.info(con);
+
+			con.close();
+
+		}
+		long end = System.currentTimeMillis();
+		log.info("TOTAL"+(end-start));
+		log.info("=================");
+	}
+}
+//히카리를 이용하면 sql로 이용하는것보다 접속속도를 빠르게 할수있다.
+//lombok,JUnit,jdbc 라이브러리
